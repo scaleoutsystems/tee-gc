@@ -141,11 +141,7 @@ RUN git clone https://github.com/gramineproject/gramine.git /opt/gramine \
   --buildtype=release -Ddirect=enabled -Dsgx=enabled --prefix=/opt/conda/envs/default \
   && conda run -n default ninja -C build/ \
   && sudo /opt/conda/envs/default/bin/ninja -C build/ install \
-  && popd \
-  #
-  # GSC
-  && git clone https://github.com/gramineproject/gsc.git /opt/gsc \
-  && ln -s /opt/gsc/gsc /opt/conda/envs/default/bin
+  && popd
 
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=dialog
