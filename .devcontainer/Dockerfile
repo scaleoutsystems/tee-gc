@@ -147,8 +147,5 @@ RUN git clone https://github.com/gramineproject/gramine.git /opt/gramine \
   && git clone https://github.com/gramineproject/gsc.git /opt/gsc \
   && ln -s /opt/gsc/gsc /opt/conda/envs/default/bin
 
-# Gramine
-
-
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=dialog
