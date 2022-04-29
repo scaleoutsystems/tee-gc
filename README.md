@@ -1,1 +1,1 @@
-# Gramine Shielded Containers for FEDn compoments
+# Gramine Containers for FEDn
