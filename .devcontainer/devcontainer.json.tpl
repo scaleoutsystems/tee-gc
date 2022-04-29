@@ -3,8 +3,8 @@
   "dockerFile": "Dockerfile",
   "context": "..",
   "remoteUser": "default",
-  // "workspaceFolder": "/tee-gsc",
-  // "workspaceMount": "source=/path/to/tee-gsc,target=/tee-gsc,type=bind,consistency=default",
+  // "workspaceFolder": "/tee-gc",
+  // "workspaceMount": "source=/path/to/tee-gc,target=/tee-gc,type=bind,consistency=default",
   "extensions": [
     "exiasr.hadolint",
     "yzhang.markdown-all-in-one",
