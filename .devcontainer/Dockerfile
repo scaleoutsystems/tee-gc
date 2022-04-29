@@ -121,7 +121,7 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 # Setup default environment
-COPY environment.yaml /tmp/environment.yaml
+COPY .devcontainer/environment.yaml /tmp/environment.yaml
 RUN conda env create -f /tmp/environment.yaml \
   && rm /tmp/environment.yaml \
   && conda run -n default python -m ipykernel install --name default \
