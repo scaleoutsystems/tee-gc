@@ -1,6 +1,6 @@
 {
   "name": "devcontainer",
-  "dockerFile": "../Dockerfile",
+  "dockerFile": "Dockerfile",
   "context": "..",
   "remoteUser": "default",
   // "workspaceFolder": "/tee-gsc",
