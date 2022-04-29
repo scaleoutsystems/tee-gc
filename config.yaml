@@ -1,0 +1,8 @@
+Distro: "ubuntu:20.04"
+Registry: "" # use default
+Gramine:
+    Repository: "https://github.com/gramineproject/gramine.git"
+    Branch:     "v1.1"
+SGXDriver:
+    Repository: "" # use default
+    Branch:     "" # use default
