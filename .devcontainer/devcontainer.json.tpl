@@ -12,9 +12,6 @@
   "mounts": [
     "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind,consistency=default",
   ],
-  "runArgs": [
-    "--privileged"
-  ],
   "forwardPorts": [
     8090,
     9000,

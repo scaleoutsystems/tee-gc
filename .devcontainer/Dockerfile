@@ -1,14 +1,9 @@
 # Base image
-FROM debian:bookworm
+FROM ubuntu:focal
 
 # Env versioning
 ARG HADOLINT_VERSION=v2.8.0
 ARG DOCKER_VERSION=19.03.9
-ARG CONDA_VERSION=4.9.2
-ARG COMPOSE_VERSION=1.29.2
-ARG SGX_SDK_VERSION=2.16.100.4
-ARG SGX_PSW_VERSION=2.15.1
-ARG GRAMINE_HEAD=v1.1
 
 # Non-root user with sudo access
 ARG USERNAME=default
@@ -38,20 +33,9 @@ RUN apt-get update \
   git \
   vim \
   openssh-client \
-  build-essential \
-  autoconf \
-  libtool \
-  pkg-config \
-  googletest \
-  libgtest-dev \
-  autoconf \
-  gawk \
-  libcurl4-openssl-dev \
-  libprotobuf-c-dev \
-  protobuf-c-compiler \
-  linux-headers-amd64 \
-  unzip \
-  bison \
+  && apt-get autoremove -y \
+  && apt-get clean -y \
+  && rm -rf /var/lib/apt/lists/* \
   #
   # Hadolint
   && wget --progress=dot:giga -O /bin/hadolint \
@@ -65,83 +49,11 @@ RUN apt-get update \
   && curl -L https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose \
   && chmod +x /usr/local/bin/docker-compose \
   #
-  # SGX SDK
-  && wget --progress=dot:giga https://download.01.org/intel-sgx/latest/linux-latest/distro/ubuntu20.04-server/sgx_linux_x64_sdk_${SGX_SDK_VERSION}.bin \
-  && chmod +x sgx_linux_x64_sdk_${SGX_SDK_VERSION}.bin \
-  && ./sgx_linux_x64_sdk_${SGX_SDK_VERSION}.bin --prefix /opt/sgx-sdk \
-  && rm sgx_linux_x64_sdk_${SGX_SDK_VERSION}.bin \
-  #
-  # SGX PSW
-  && wget --progress=dot:giga https://download.01.org/intel-sgx/sgx-linux/${SGX_PSW_VERSION}/distro/ubuntu20.04-server/sgx_debian_local_repo.tgz \
-  && tar xzvf sgx_debian_local_repo.tgz \
-  && mv sgx_debian_local_repo /opt \
-  && echo 'deb [trusted=yes] file:///opt/sgx_debian_local_repo focal main' >> /etc/apt/sources.list \
-  && echo 'deb [trusted=yes] http://archive.ubuntu.com/ubuntu focal main' >> /etc/apt/sources.list \
-  && apt-get update \
-  && sudo apt-get install --no-install-recommends -y \
-  ubuntu-keyring \
-  libsgx-urts \
-  libsgx-launch \
-  libsgx-epid \
-  libsgx-quote-ex \
-  libsgx-dcap-ql \
-  # 
-  # Install conda
-  && wget --progress=dot:giga https://repo.anaconda.com/miniconda/Miniconda3-py39_${CONDA_VERSION}-Linux-x86_64.sh \
-  && bash Miniconda3-py39_${CONDA_VERSION}-Linux-x86_64.sh -b -p /opt/conda \
-  && rm -f Miniconda3-py39_${CONDA_VERSION}-Linux-x86_64.sh \
-  && ln -s /opt/conda/bin/conda /bin/conda \
-  && ln -s /opt/conda/bin/conda-env /bin/conda-env \
-  #
   # Create a non-root user to use if preferred
   && groupadd --gid $USER_GID $USERNAME \
   && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME \
   && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
-  && chmod 0440 /etc/sudoers.d/$USERNAME \
-  #
-  # Configure FEDn directories
-  && mkdir -p /app/certs \
-  && mkdir -p /app/client/package \
-  && mkdir -p /app/config \
-  && chown -R $USERNAME /app \
-  #
-  # Configure data dir
-  && mkdir -p $DATA_DIR \
-  && chown $USERNAME $DATA_DIR \
-  #
-  # Configure for gramine
-  && mkdir -p /usr/include/asm \
-  && ln -s /usr/src/linux-headers-*/arch/x86/include/uapi/asm/sgx.h /usr/include/asm/sgx.h \
-  && mkdir -p /opt/gramine \
-  && chown -R $USERNAME /opt/gramine \
-  #
-  # Cleanup
-  && apt-get autoremove -y \
-  && apt-get clean -y \
-  && rm -rf /var/lib/apt/lists/*
-
-# Setup default environment
-COPY .devcontainer/environment.yaml /tmp/environment.yaml
-RUN conda env create -f /tmp/environment.yaml \
-  && rm /tmp/environment.yaml \
-  && conda run -n default python -m ipykernel install --name default \
-  && chown $USERNAME /opt/conda/envs/default
-
-# Init conda for non-root user
-USER $USERNAME
-RUN conda init bash \
-  && conda config --set auto_activate_base false \
-  && echo "conda activate default" >> ~/.bashrc
-
-# Gramine
-RUN git clone https://github.com/gramineproject/gramine.git /opt/gramine \
-  && pushd /opt/gramine \
-  && git checkout $GRAMINE_HEAD \
-  && conda run -n default meson setup build/ \
-  --buildtype=release -Ddirect=enabled -Dsgx=enabled --prefix=/opt/conda/envs/default \
-  && conda run -n default ninja -C build/ \
-  && sudo /opt/conda/envs/default/bin/ninja -C build/ install \
-  && popd
+  && chmod 0440 /etc/sudoers.d/$USERNAME
 
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=dialog
