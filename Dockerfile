@@ -127,5 +127,6 @@ RUN apt-get update \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
 
+ENV PYTHONPATH=/usr/local
 WORKDIR /app
 ENTRYPOINT [ "/venv/bin/fedn" ]
