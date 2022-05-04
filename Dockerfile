@@ -29,7 +29,12 @@ ADD https://download.01.org/intel-sgx/latest/linux-latest/distro/ubuntu20.04-ser
 ADD https://download.01.org/intel-sgx/sgx-linux/${SGX_PSW_VERSION}/distro/ubuntu20.04-server/sgx_debian_local_repo.tgz /tmp/sgx_debian_local_repo.tgz
 ADD https://www.python.org/ftp/python/3.8.9/Python-3.8.9.tar.xz /tmp/Python-3.8.9.tar.xz
 COPY --from=git /tmp/gramine /opt/gramine
-COPY --from=git /tmp/fedn /opt/fedn
+COPY --from=git /tmp/fedn/fedn /app/fedn
+
+# Copy configs
+COPY config/settings-client.yaml /app/config/settings-client.yaml
+COPY config/settings-combiner.yaml /app/config/settings-combiner.yaml
+COPY config/settings-reducer.yaml /app/config/settings-reducer.yaml
 
 # Gramine apt deps
 SHELL ["/bin/bash", "-c"]
@@ -107,13 +112,20 @@ RUN apt-get update \
     && popd \
     #
     # Install FEDn
+    && mkdir -p /app \
+    && mkdir -p /app/client \
+    && mkdir -p /app/certs \
+    && mkdir -p /app/client/package \
+    && mkdir -p /app/certs \
     && python3.8 -m venv /venv \
     && /venv/bin/pip install --upgrade pip \
     && /venv/bin/pip install --upgrade setuptools \
-    && /venv/bin/pip install --no-cache-dir -e /opt/fedn/fedn \
+    && /venv/bin/pip install --no-cache-dir -e /app/fedn \
     #
     # Clean up
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
-    
+
+WORKDIR /app
+ENTRYPOINT [ "/venv/bin/fedn" ]
