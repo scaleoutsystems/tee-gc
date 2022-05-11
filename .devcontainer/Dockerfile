@@ -4,6 +4,7 @@ FROM ubuntu:focal
 # Env versioning
 ARG HADOLINT_VERSION=v2.8.0
 ARG DOCKER_VERSION=19.03.9
+ARG COMPOSE_VERSION=1.29.2
 
 # Non-root user with sudo access
 ARG USERNAME=default
