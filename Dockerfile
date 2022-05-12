@@ -115,3 +115,4 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
+ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "default", "/app/fedn-sgx"]

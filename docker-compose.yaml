@@ -67,7 +67,7 @@ services:
       # - GET_HOSTS_FROM=dns
       - USER=test
       - PROJECT=project
-    command: run reducer -n reducer --init=/app/config/settings-reducer.yaml
+    command: reducer
     privileged: true # to access SGX devices
     # ports:
     #   - 8090:8090
@@ -79,20 +79,20 @@ services:
     environment:
       # - GET_HOSTS_FROM=dns
       - PYTHONUNBUFFERED=0
-    command: run combiner -in /app/config/settings-combiner.yaml
+    command: combiner
     privileged: true # to access SGX devices
     # ports:
     #   - 12080:12080
     network_mode: "host" # TODO: configure network in enclave to avoid this
 
   # Client (skip clients for now)
-  # client:
-  #   build: .
-  #   environment:
-  #     # - GET_HOSTS_FROM=dns
-  #     - TMPDIR=/tmp
-  #   command: run client -in /app/config/settings-client.yaml
-  #   deploy:
-  #     replicas: 2
-  #   privileged: true # to access SGX devices
-  #   network_mode: "host" # TODO: configure network in enclave to avoid this
+  client:
+    build: .
+    environment:
+      # - GET_HOSTS_FROM=dns
+      - TMPDIR=/tmp
+    command: client
+    deploy:
+      replicas: 1
+    privileged: true # to access SGX devices
+    network_mode: "host" # TODO: configure network in enclave to avoid this

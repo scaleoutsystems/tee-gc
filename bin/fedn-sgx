@@ -3,7 +3,7 @@ set -e
 
 # Parse args
 service=$1
-if [[ "$service" != "combiner" && "$service" != "reducer" ]]; then
+if [[ "$service" != "combiner" && "$service" != "reducer" && "$service" != "client" ]]; then
     echo "Argument $1 is not valid."
     exit 1
 fi
@@ -23,6 +23,6 @@ gramine-sgx-get-token --output $service.token --sig $service.sig
 # Start service
 if [[ "$service" == "reducer" ]]; then
     gramine-sgx reducer /opt/conda/envs/default/bin/fedn run reducer -n reducer --init=/app/config/settings-reducer.yaml
-elif [[ "$service" == "combiner" ]]; then
-    gramine-sgx combiner /opt/conda/envs/default/bin/fedn run combiner -in /app/config/settings-combiner.yaml
+else
+    gramine-sgx $service /opt/conda/envs/default/bin/fedn run $service -in /app/config/settings-$service.yaml
 fi

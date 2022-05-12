@@ -41,7 +41,7 @@ fs.mount.etc.type = "chroot"
 fs.mount.etc.path = "/etc"
 fs.mount.etc.uri = "file:/etc"
 
-sgx.thread_num = 16
+sgx.thread_num = 32
 sgx.enclave_size = "1G"
 sgx.debug = true
 sgx.nonpie_binary = true
