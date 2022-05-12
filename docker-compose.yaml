@@ -85,14 +85,14 @@ services:
     #   - 12080:12080
     network_mode: "host" # TODO: configure network in enclave to avoid this
 
-  # Client
-  client:
-    build: .
-    environment:
-      # - GET_HOSTS_FROM=dns
-      - TMPDIR=/tmp
-    command: run client -in /app/config/settings-client.yaml
-    deploy:
-      replicas: 2
-    privileged: true # to access SGX devices
-    network_mode: "host" # TODO: configure network in enclave to avoid this
+  # Client (skip clients for now)
+  # client:
+  #   build: .
+  #   environment:
+  #     # - GET_HOSTS_FROM=dns
+  #     - TMPDIR=/tmp
+  #   command: run client -in /app/config/settings-client.yaml
+  #   deploy:
+  #     replicas: 2
+  #   privileged: true # to access SGX devices
+  #   network_mode: "host" # TODO: configure network in enclave to avoid this

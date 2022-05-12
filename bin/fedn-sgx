@@ -3,7 +3,7 @@ set -e
 
 # Parse args
 service=$1
-if [[ "$service" != "combiner" && "$service" != "client" ]]; then
+if [[ "$service" != "combiner" && "$service" != "reducer" ]]; then
     echo "Argument $1 is not valid."
     exit 1
 fi
@@ -14,11 +14,15 @@ openssl genrsa -3 -out $service-key.pem 3072
 # Generate gramine config files
 gramine-manifest \
     -Dlog_level=debug \
-    -Dentrypoint=/usr/local/bin/python3.8 \
-    -Denv_home=/venv \
+    -Dentrypoint=/opt/conda/envs/default/bin/python3.8 \
+    -Denv_home=/opt/conda/envs/default \
     fedn.manifest.template $service.manifest
 gramine-sgx-sign --key $service-key.pem --manifest $service.manifest --output $service.manifest.sgx
 gramine-sgx-get-token --output $service.token --sig $service.sig
 
 # Start service
-gramine-sgx $service "/opt/conda/envs/default/bin/fedn run $service -in /app/config/settings-$service.yaml"
+if [[ "$service" == "reducer" ]]; then
+    gramine-sgx reducer /opt/conda/envs/default/bin/fedn run reducer -n reducer --init=/app/config/settings-reducer.yaml
+elif [[ "$service" == "combiner" ]]; then
+    gramine-sgx combiner /opt/conda/envs/default/bin/fedn run combiner -in /app/config/settings-combiner.yaml
+fi
