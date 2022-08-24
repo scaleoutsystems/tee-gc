@@ -30,3 +30,4 @@ docker run ghcr.io/scaleoutsystems/tee-gc/fedn -v config/settings-client.yaml:/a
 ## Known issues
 - All the services run on `localhost` with the Docker containers attaching straight to the host network.
 - The container is not setup to run the compute package in the enclave (deps are missing).
+- There is a compile error in the current version of Gramine with `debian-slim`. In the latest release there is a precompiled version of Gramine for Ubuntu. A possible solution is to try to install the "deb" package on `debian-slim` or to rebase the whole image on Ubuntu. The latter may break some dependencies on the other projects that are using this image.
