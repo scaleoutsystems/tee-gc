@@ -62,7 +62,7 @@ services:
 
   # Reducer
   reducer:
-    build: .
+    image: ghcr.io/scaleoutsystems/tee-gc/fedn
     environment:
       # - GET_HOSTS_FROM=dns
       - USER=test
@@ -75,7 +75,7 @@ services:
 
   # Combiner
   combiner:
-    build: .
+    image: ghcr.io/scaleoutsystems/tee-gc/fedn
     environment:
       # - GET_HOSTS_FROM=dns
       - PYTHONUNBUFFERED=0
@@ -87,7 +87,7 @@ services:
 
   # Client (skip clients for now)
   client:
-    build: .
+    image: ghcr.io/scaleoutsystems/tee-gc/fedn
     environment:
       # - GET_HOSTS_FROM=dns
       - TMPDIR=/tmp

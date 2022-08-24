@@ -12,9 +12,11 @@ This repository defines a [Gramine](https://github.com/gramineproject/gramine)-e
 For demonstration purposes you can run the whole stack on a single SGX machine using [docker-compose](https://docs.docker.com/compose). First clone and locate in the current repo and then run the following command.
 
 ```bash
-docker compose up -d
+docker-compose up -d
 ```
-> **Note** the usual FEDn ports should be exposed on the machine. You can use these ports to access the UI.
+> **Notes** 
+> 1. You may need to login into Scaleout's GitHub registry to access ghcr.io/scaleoutsystems/tee-gc/fedn:latest
+> 2. The usual FEDn ports should be exposed on the machine. You can use these ports to access the UI.
 
 ## Running individual components
 To run reducer, combiner and client individually you can simply run the following Docker command:
