@@ -2,7 +2,7 @@
 FROM alpine/git:v2.34.2 as git
 
 # Git heads
-ARG GRAMINE_HEAD=v1.1
+ARG GRAMINE_HEAD=29236e4f5870f074fa5c957acab6427c67a365f0
 ARG FEDN_HEAD=develop
 
 # Gramine
@@ -21,7 +21,7 @@ RUN git checkout $FEDN_HEAD
 FROM debian:bookworm-slim
 
 # Build args
-ARG SGX_SDK_VERSION=2.16.100.4
+ARG SGX_SDK_VERSION=2.17.100.3
 ARG SGX_PSW_VERSION=2.15.1
 ARG CONDA_VERSION=4.9.2
 
@@ -64,6 +64,7 @@ RUN apt-get update \
     cmake \
     pkg-config \
     zlib1g-dev \
+    protobuf-compiler \
     # SGX SDK
     && chmod +x /tmp/sgx_linux_x64_sdk_${SGX_SDK_VERSION}.bin \
     && /tmp/sgx_linux_x64_sdk_${SGX_SDK_VERSION}.bin --prefix /opt/sgx-sdk \
